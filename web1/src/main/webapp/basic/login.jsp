@@ -17,7 +17,7 @@
 <%=id %> <%=pw %> --%>
 
 <h4>아이디 : <%=request.getParameter("userid") %></h4>
-<h4>아이디 : <%=request.getParameter("password") %></h4>
+<h4>비밀번호 : <%=request.getParameter("password") %></h4>
 
 </body>
 </html>
