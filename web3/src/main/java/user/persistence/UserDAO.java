@@ -102,7 +102,7 @@ public class UserDAO{
 				String addr = rs.getString("addr");
 				String mobile = rs.getString("mobile");
 				
-				//월요일날 코딩
+				list.add(new UserDTO(no, username, birthyear, addr, mobile));
 			}
 				
 		} catch (Exception e) {
@@ -111,6 +111,96 @@ public class UserDAO{
 			close(con, pstmt, rs);
 		}
 		return list;
+	}
+	
+	public UserDTO getRow(int no) {
+		UserDTO dto = null;
+		
+		try {
+			con = getConnection();
+			
+			String sql ="SELECT * FROM usertbl WHERE no=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()){
+				String name = rs.getString("username");
+				int birthYear = rs.getInt("birthYear");
+				String addr = rs.getString("addr");
+				String mobile = rs.getString("mobile");
+				
+				dto = new UserDTO(no, name, birthYear, addr, mobile);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt, rs);
+		}
+		return dto;
+	}
+	
+	//수정
+	public boolean update(int no, String addr, String mobile) {
+		boolean flag = false;
+		
+		try {
+			con = getConnection();
+			
+			String sql = "";
+			if(addr!="" && mobile!=""){
+				sql = "UPDATE usertbl SET addr=?, mobile=? where no=?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, addr);
+				pstmt.setString(2, mobile);
+				pstmt.setInt(3, no);		
+			}else{
+				if(addr!=""){
+					sql="UPDATE usertbl SET mobile=? where no=?";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, mobile);
+					pstmt.setInt(2, no);			
+				}else {
+					sql="UPDATE usertbl SET mobile=? where no=?";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setString(1, mobile);
+					pstmt.setInt(2, no);
+				}
+			}
+			
+			int count = pstmt.executeUpdate();
+			
+			if(count>0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt);
+		}
+		return flag;
+	}
+	
+	public boolean remove(int no) {
+		
+		boolean flag=false;
+		
+		try {
+			con = getConnection();
+			
+			String sql = "DELETE FROM usertbl WHERE no=?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			
+			int count = pstmt.executeUpdate();
+			if(count>0) flag=true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt);
+		}
+		return flag;
 	}
 	
 	
