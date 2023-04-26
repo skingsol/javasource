@@ -2,12 +2,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>book</groupId>
-	<artifactId>book</artifactId>
+	<groupId>book_mvc</groupId>
+	<artifactId>book_mvc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-		<!-- 필요한 외부 라이브러리(ojdbc8, lombok, jstl) 기록 -->
-		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
+	<!-- 필요한 외부 라이브러리(ojdbc8, lombok, jstl) 기록 -->
+	<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
 	<dependencies>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
