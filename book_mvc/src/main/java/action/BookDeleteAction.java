@@ -11,7 +11,7 @@ public class BookDeleteAction implements BookAction {
 		int code = Integer.parseInt(request.getParameter("code"));
 		
 		BookDeleteService service = new BookDeleteService();
-		Boolean deleteFlag = service.DeleteBook(code);
+		boolean deleteFlag = service.DeleteBook(code);
 		
 		String path = "";
 		if(deleteFlag) {

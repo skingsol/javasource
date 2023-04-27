@@ -231,4 +231,42 @@ public class BookDAO {
 		return flag;
 	}
 	
+	// 도서정보 조회
+	// SELECT * FROM booktbl WHERE 제목 criteria OR 글쓴이 LIKE ?
+	public List<BookDTO> search(String criteria, String keyword) {
+	    List<BookDTO> list = new ArrayList<>();
+
+	    try {
+	        con = getConnection();
+	        
+//	        String sql = "SELECT code,title,writer,price FROM booktbl WHERE ";
+//	        if(criteria.equals("writer")) {
+//	        	sql += "writer like ?";
+//	        }else {
+//	        	sql += "title like ?";
+//	        }
+	        
+	        String sql = "SELECT code,title,writer,price FROM booktbl WHERE " + criteria + " LIKE ? ORDER BY code DESC";
+	        
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, "%" + keyword + "%");
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            BookDTO dto = new BookDTO();
+	            dto.setCode(rs.getInt("code"));
+	            dto.setTitle(rs.getString("title"));
+	            dto.setWriter(rs.getString("writer"));
+	            dto.setPrice(rs.getInt("price"));
+	            list.add(dto);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(con, pstmt, rs);
+	    }
+
+	    return list;
+	}
+
 }
