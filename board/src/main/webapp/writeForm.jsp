@@ -38,7 +38,8 @@
   
   <button type="submit" class="btn btn-primary">등록</button>
   <button type="reset" class="btn btn-danger">다시작성</button>
-  <button type="button" class="btn btn-success">목록보기</button>
+  <button type="button" class="btn btn-success" >목록보기</button>
 </form>
 </main>
+<script src='<c:url value="/js/read.js" />'></script>
 <%@ include file="include/footer.jsp" %>
