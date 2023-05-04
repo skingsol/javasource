@@ -3,12 +3,13 @@ package board.service;
 import java.util.List;
 
 import board.domain.BoardDTO;
-import board.domain.PageDTO;
 import board.persistence.BoardDAO;
 
-public class BoardListService {
-	public List<BoardDTO>  getList(PageDTO pageDTO){
+public class BoardSearchService {
+	public List<BoardDTO> search(String criteria, String keyword){
 		BoardDAO dao = new BoardDAO();
-		return dao.getRows(pageDTO);
+		return dao.searchRows(criteria, keyword);
+		
+		
 	}
 }
