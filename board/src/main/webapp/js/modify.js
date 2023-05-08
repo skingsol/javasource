@@ -1,8 +1,12 @@
 /**
  * 
  */
+const modifyForm = document.querySelector("#modifyForm");
+
  document.querySelector(".btn-success").addEventListener("click",()=>{
-	 location.href="list.do";
+	 //location.href="list.do";
+	 modifyForm.action = "list.do";
+	 modifyForm.submit();
  });
  
  //삭제버튼 클릭시 modifyForm 전송
@@ -22,7 +26,7 @@
 	 
 	 modifyForm.action = "delete.do";
 	 modifyForm.method = "post";
-	 console.log(modifyForm);
+	 //console.log(modifyForm);
 	 modifyForm.submit();
  })
  

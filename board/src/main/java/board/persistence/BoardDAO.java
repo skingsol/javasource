@@ -113,6 +113,9 @@ public class BoardDAO {
 	public List<BoardDTO> getRows(PageDTO pageDTO) {
 		List<BoardDTO> list = new ArrayList<>();
 		
+		int start = pageDTO.getPage() * pageDTO.getAmount();
+		int end = (pageDTO.getPage() -1) * pageDTO.getAmount();
+
 		try {
 			con = getConnection();
 			String sql = null;
@@ -134,8 +137,6 @@ public class BoardDAO {
 				//? 해결
 				// rownum 값 : 페이지번호 * 한페이지에 보여줄 목록 개수
 				// rnum  값 : (페이지번호 -1) * 한페이지에 보여줄 목록 개수 
-				int start = pageDTO.getPage() * pageDTO.getAmount();
-				int end = (pageDTO.getPage() -1) * pageDTO.getAmount();
 				
 				pstmt.setInt(1, start);
 				pstmt.setInt(2, end);
@@ -143,10 +144,21 @@ public class BoardDAO {
 						
 			} else {
 				// 검색
-				sql = "SELECT bno,title,name,regdate,cnt,re_lev FROM board ";
-				sql += "WHERE " + pageDTO.getCriteria() + " like ? ORDER BY re_ref desc, re_seq asc";
+				//sql = "SELECT bno,title,name,regdate,cnt,re_lev FROM board ";
+				//sql += "WHERE " + pageDTO.getCriteria() + " like ? ORDER BY re_ref desc, re_seq asc";
+				
+				sql = "SELECT * ";
+				sql += "FROM (SELECT ROWNUM rnum, bno, title, name, regdate, cnt, re_lev ";
+				sql += "FROM (SELECT bno, title, name, regdate, cnt, re_lev ";
+				sql += "FROM board WHERE " + pageDTO.getCriteria() + " like ? ";
+				sql += "ORDER BY re_ref desc, re_seq ASC) ";
+				sql += "WHERE ROWNUM <= ?) ";
+				sql += "WHERE rnum > ?";					
+				
 				pstmt = con.prepareStatement(sql);
 				pstmt.setString(1, "%" + pageDTO.getKeyword() + "%");
+				pstmt.setInt(2, start);
+				pstmt.setInt(3, end);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -168,9 +180,42 @@ public class BoardDAO {
 		} finally {
 			close(con, pstmt, rs);
 		}
-		return list;
-		
+		return list;		
 	}
+	
+	//전체 게시물 개수
+	public int totalRows(PageDTO pageDTO) {
+		int total = 0;
+		try {
+			
+			con = getConnection();
+			String sql = "";
+			
+			if(pageDTO.getKeyword().isEmpty() && pageDTO.getCriteria().isEmpty()) {
+				sql = "SELECT COUNT(*) FROM board";
+				pstmt = con.prepareStatement(sql);
+			}else {
+				sql = "SELECT COUNT(*) FROM board WHERE "+ pageDTO.getCriteria() +" LIKE ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+pageDTO.getKeyword()+"%");
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt, rs);
+		}
+		return total;
+	}
+	
+	
+	
+	
 	// 게시글 상세보기
 	public BoardDTO getRow(int bno) {
 		BoardDTO dto = null;
@@ -264,7 +309,7 @@ public class BoardDAO {
 			rollback(con);
 			e.printStackTrace();
 		} finally {
-			close(con, pstmt, rs);
+			close(con, pstmt);
 		}
 		return flag;
 	}

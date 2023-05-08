@@ -1,5 +1,6 @@
 package board.action;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,15 +31,21 @@ public class BoardReplyAction implements Action {
 		dto.setReRef(Integer.parseInt(formData.get("re_ref")));
 		dto.setReLev(Integer.parseInt(formData.get("re_lev")));
 		dto.setReSeq(Integer.parseInt(formData.get("re_seq")));
-		
+
+		// 페이지 나누기 정보
+		String criteria = formData.get("criteria");
+		String keyword = URLEncoder.encode(formData.get("keyword"), "utf-8");
+		String page = formData.get("page");
+		String amount = formData.get("amount");
+
 		BoardReplyService service = new BoardReplyService();
-		
+
 		String path = "";
 		// 비밀번호가 일치하는지 확인
 		if (service.reply(dto)) {
-			path = "list.do";
+			path = "list.do?criteria="+criteria+"&keyword="+keyword+"&page="+page+"&amount="+amount;
 		}else {
-			path = "replyView.do?bno="+dto.getBno();
+			path = "replyView.do?bno="+dto.getBno()+"&criteria="+criteria+"&keyword="+keyword+"&page="+page+"&amount="+amount;
 		}
 		return new ActionForward(true, path);
 	}

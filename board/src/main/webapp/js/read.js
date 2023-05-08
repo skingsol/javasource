@@ -6,12 +6,13 @@
   
   
  document.querySelector(".btn-success").addEventListener("click",()=>{
-	 location.href="list.do";
+	 readForm.action = "list.do";
+ 	 readForm.submit();
  });
 // 답변 클릭 시 
 document.querySelector(".btn-secondary").addEventListener("click",()=>{
 	 readForm.action = "replyView.do";
-  readForm.submit();
+ 	 readForm.submit();
  });
  
   document.querySelector("form").addEventListener("submit", (e) => {

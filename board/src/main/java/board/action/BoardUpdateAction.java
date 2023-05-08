@@ -1,10 +1,12 @@
 package board.action;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import board.domain.BoardDTO;
+import board.domain.PageDTO;
 import board.persistence.BoardDAO;
 import board.service.BoardUpdateService;
 import board.util.BoardUploadUtils;
@@ -23,19 +25,25 @@ public class BoardUpdateAction implements Action {
 		dto.setTitle(formData.get("title"));
 		dto.setContent(formData.get("content"));
 		dto.setPassword(formData.get("password"));
-		if(formData.containsKey("attach")) {
+		if (formData.containsKey("attach")) {
 			dto.setAttach(formData.get("attach"));
-		} 
-		
-		//서비스작업
+		}
+
+		// 페이지 나누기 정보
+		String criteria = formData.get("criteria");
+		String keyword = URLEncoder.encode(formData.get("keyword"), "utf-8") ;
+		String page = formData.get("page");
+		String amount = formData.get("amount");
+
+		// 서비스작업
 		BoardUpdateService service = new BoardUpdateService();
-		
+
 		String path = "";
 		// 비밀번호가 일치하는지 확인
 		if (service.update(dto)) {
-			path = "read.do?bno="+dto.getBno();
+			path = "read.do?bno="+dto.getBno()+"&criteria="+criteria+"&keyword="+keyword+"&page="+page+"&amount="+amount;
 		}else {
-			path = "modify.do?bno="+dto.getBno();
+			path = "modify.do?bno="+dto.getBno()+"&criteria="+criteria+"&keyword="+keyword+"&page="+page+"&amount="+amount;
 		}
 		return new ActionForward(true, path);
 	}
